@@ -1,0 +1,12 @@
+{
+    "name": "georgian-tax-service",
+    "repository": "https://github.com/yourusername/rsmari.git",
+    "build": {
+        "web": "npm run build"
+    },
+    "env": {
+        "APP_DEBUG": false,
+        "APP_ENV": "production",
+        "LOG_CHANNEL": "single"
+    }
+}
