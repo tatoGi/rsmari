@@ -42,6 +42,7 @@ class TaxPayerController extends Controller
 
             $identCodes = $import->getIdentCodes();
             $rowData = $import->getRowData();
+            $uploadBatchId = $import->getUploadBatchId();
             $results = [];
             $errors = [];
 
@@ -73,6 +74,8 @@ class TaxPayerController extends Controller
                             'name' => $sourceData['name'] ?? '',
                             'user' => $sourceData['user'] ?? '',
                             'gift_name' => $sourceData['gift_name'] ?? '',
+                            'upload_order' => $sourceData['upload_order'] ?? 0,
+                            'upload_batch_id' => $uploadBatchId,
                         ]);
                         $results[] = $result;
                     } else {
@@ -88,6 +91,8 @@ class TaxPayerController extends Controller
                             'name' => $sourceData['name'] ?? '',
                             'user' => $sourceData['user'] ?? '',
                             'gift_name' => $sourceData['gift_name'] ?? '',
+                            'upload_order' => $sourceData['upload_order'] ?? 0,
+                            'upload_batch_id' => $uploadBatchId,
                         ]);
                         $errors[] = $identCode . ': ' . ($response['error'] ?? 'Unknown error');
                     }
@@ -107,6 +112,8 @@ class TaxPayerController extends Controller
                         'name' => $sourceData['name'] ?? '',
                         'user' => $sourceData['user'] ?? '',
                         'gift_name' => $sourceData['gift_name'] ?? '',
+                        'upload_order' => $sourceData['upload_order'] ?? 0,
+                        'upload_batch_id' => $uploadBatchId,
                     ]);
                 }
             }

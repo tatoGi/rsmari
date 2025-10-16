@@ -23,7 +23,10 @@ class TaxPayerResultsExport implements FromQuery, WithHeadings, WithMapping, Wit
 
     public function query()
     {
-        return $this->query->orderBy('created_at', 'desc');
+        // Order by upload_order to maintain the original file order
+        // Then by upload_batch_id to group uploads together
+        return $this->query->orderBy('upload_batch_id', 'desc')
+                          ->orderBy('upload_order', 'asc');
     }
 
     public function headings(): array

@@ -26,6 +26,8 @@ class TaxPayerResult extends Model
         'name',
         'user',
         'gift_name',
+        'upload_order',
+        'upload_batch_id',
     ];
 
     protected $casts = [
