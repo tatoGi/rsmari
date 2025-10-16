@@ -12,35 +12,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tax_payer_results', function (Blueprint $table) {
-            // Check if columns exist before adding
+            // Add missing columns if they don't exist
             if (!Schema::hasColumn('tax_payer_results', 'name')) {
-                $table->string('name')->nullable()->after('raw_response');
+                $table->string('name')->nullable();
             }
             if (!Schema::hasColumn('tax_payer_results', 'user')) {
-                $table->string('user')->nullable()->after('name');
+                $table->string('user')->nullable();
             }
             if (!Schema::hasColumn('tax_payer_results', 'gift_name')) {
-                $table->string('gift_name')->nullable()->after('user');
+                $table->string('gift_name')->nullable();
             }
             if (!Schema::hasColumn('tax_payer_results', 'upload_order')) {
-                $table->unsignedInteger('upload_order')->default(0)->after('gift_name')->comment('Order of row in uploaded file');
+                $table->unsignedInteger('upload_order')->default(0)->comment('Order of row in uploaded file');
             }
             if (!Schema::hasColumn('tax_payer_results', 'upload_batch_id')) {
-                $table->string('upload_batch_id')->nullable()->after('upload_order')->comment('Batch ID to group uploads');
+                $table->string('upload_batch_id')->nullable()->comment('Batch ID to group uploads');
             }
         });
 
-        // Add indexes if they don't exist
+        // Add indexes
         Schema::table('tax_payer_results', function (Blueprint $table) {
-            try {
+            if (!Schema::hasIndex('tax_payer_results', 'upload_batch_id')) {
                 $table->index('upload_batch_id');
-            } catch (\Exception $e) {
-                // Index might already exist
-            }
-            try {
-                $table->index(['upload_batch_id', 'upload_order']);
-            } catch (\Exception $e) {
-                // Index might already exist
             }
         });
     }
@@ -51,18 +44,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tax_payer_results', function (Blueprint $table) {
-            // Drop indexes if they exist
-            try {
-                $table->dropIndex('tax_payer_results_upload_batch_id_index');
-            } catch (\Exception $e) {
-                // Index doesn't exist
-            }
-            try {
-                $table->dropIndex('tax_payer_results_upload_batch_id_upload_order_index');
-            } catch (\Exception $e) {
-                // Index doesn't exist
-            }
-
             // Drop columns if they exist
             if (Schema::hasColumn('tax_payer_results', 'name')) {
                 $table->dropColumn('name');
