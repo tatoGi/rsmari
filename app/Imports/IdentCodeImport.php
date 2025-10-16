@@ -11,11 +11,20 @@ class IdentCodeImport implements ToCollection, WithHeadingRow
 {
     protected $identCodes = [];
     protected $rowData = [];
+    protected $uploadBatchId;
+
+    public function __construct()
+    {
+        // Generate a unique batch ID for this upload
+        $this->uploadBatchId = uniqid('upload_', true);
+    }
 
     public function collection(Collection $rows)
     {
+        $rowIndex = 0;
 
         foreach ($rows as $row) {
+            $rowIndex++;
 
             // Try to find IdentCode in different possible column names
             $identCode = null;
@@ -46,11 +55,13 @@ class IdentCodeImport implements ToCollection, WithHeadingRow
             if ($identCode && $this->isValidIdentCode($identCode)) {
                 $this->identCodes[] = $identCode;
 
-                // Store additional data from the row
+                // Store additional data from the row with upload order
                 $this->rowData[$identCode] = [
                     'name' => $row['name'] ?? $row['Name'] ?? '',
                     'user' => $row['user'] ?? $row['User'] ?? '',
                     'gift_name' => $row['gift_name'] ?? $row['Gift_name'] ?? '',
+                    'upload_order' => $rowIndex,
+                    'upload_batch_id' => $this->uploadBatchId,
                 ];
             }
         }
@@ -64,7 +75,14 @@ class IdentCodeImport implements ToCollection, WithHeadingRow
     public function getRowData(): array
     {
         return $this->rowData;
-    }    private function cleanIdentCode($value): string
+    }
+
+    public function getUploadBatchId(): string
+    {
+        return $this->uploadBatchId;
+    }
+
+    private function cleanIdentCode($value): string
     {
         // Convert to string and remove any non-digit characters
         $cleaned = preg_replace('/\D/', '', (string) $value);

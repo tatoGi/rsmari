@@ -1,6 +1,6 @@
 {
     "name": "georgian-tax-service",
-    "repository": "https://github.com/yourusername/rsmari.git",
+    "repository": "https://github.com/tatoGi/rsmari.git",
     "build": {
         "web": "npm run build"
     },
